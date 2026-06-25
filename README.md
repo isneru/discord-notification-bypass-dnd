@@ -14,20 +14,19 @@ A Vencord userplugin that bypasses Discord's client-side DnD notification suppre
 
 ## Usage
 
-Add to your flake inputs:
-
-```nix
-bypass-dnd.url = "github:isneru/vesktop-bypass-shouldNotify";
-```
-
-Override `pkgs.vencord` with the plugin injected at build time:
+Fetch the repo with `builtins.fetchGit` and inject the plugin at Vencord build time:
 
 ```nix
 let
+  bypassDnd = builtins.fetchGit {
+    url = "https://github.com/isneru/vesktop-bypass-shouldNotify";
+    rev = "<commit-hash>";
+  };
+
   customVencord = pkgs.vencord.overrideAttrs (old: {
     preBuild = (old.preBuild or "") + ''
       mkdir -p src/userplugins
-      cp ${inputs.bypass-dnd.plugin} src/userplugins/bypass-dnd.ts
+      cp ${bypassDnd}/bypass-dnd.ts src/userplugins/bypass-dnd.ts
     '';
   });
 in
