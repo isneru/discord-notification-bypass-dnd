@@ -3,9 +3,11 @@
 > [!WARNING]
 > This plugin was vibecoded. The patch pattern may break on Discord updates.
 > If it stops working, open DevTools (`Ctrl+Shift+I`) and run:
+>
 > ```js
-> Vencord.Webpack.findByCode(".SUPPRESS_NOTIFICATIONS))").toString()
+> Vencord.Webpack.findByCode(".SUPPRESS_NOTIFICATIONS))").toString();
 > ```
+>
 > Find the `"dnd"` status check and update the `match` regex in `bypass-dnd.ts`.
 
 A Vencord userplugin that bypasses Discord's client-side DnD notification suppression, allowing desktop notifications to show regardless of your Discord status.
@@ -24,6 +26,7 @@ Override `pkgs.vencord` with the plugin injected at build time:
 let
   customVencord = pkgs.vencord.overrideAttrs (old: {
     preBuild = (old.preBuild or "") + ''
+      mkdir -p src/userplugins
       cp ${inputs.bypass-dnd.plugin} src/userplugins/bypass-dnd.ts
     '';
   });
